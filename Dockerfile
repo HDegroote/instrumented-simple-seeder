@@ -20,6 +20,6 @@ RUN useradd --create-home seeder
 USER seeder
 # Ensure correct permissions on corestore dir by already creating it
 # (relevant when using volumes)
-RUN mkdir $CORESTORE_LOC
+RUN mkdir $STORAGE
 
 ENTRYPOINT ["instrumented-seeder"]

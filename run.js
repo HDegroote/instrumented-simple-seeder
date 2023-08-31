@@ -7,7 +7,7 @@ const runSeeder = require('./index')
 function loadConfig () {
   const config = {
     port: parseInt(process.env.DHT_PORT || 0),
-    corestoreLoc: process.env.storage || './corestore',
+    corestoreLoc: process.env.STORAGE || './corestore',
     seedListKey: process.env.SEED_LIST_KEY,
     logLevel: process.env.LOG_LEVEL || 'info',
     instrument: process.env.INSTRUMENT?.trim().toLowerCase() === 'true',
