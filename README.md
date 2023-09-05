@@ -12,4 +12,4 @@ Can be deployed as a [Docker container](https://hub.docker.com/r/hdegroote/simpl
 
 Alternatively, from the CLI:
 
-`instrumented-seeder <SEED-LIST-KEY>`
+`SEED_LIST_KEY=<SEED-LIST-KEY> instrumented-seeder`
