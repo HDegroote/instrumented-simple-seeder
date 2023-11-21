@@ -12,10 +12,10 @@ function loadConfig () {
     logLevel: process.env.LOG_LEVEL || 'info',
     instrument: process.env.INSTRUMENT?.trim().toLowerCase() === 'true',
     repl: process.env.REPL?.trim().toLowerCase() === 'true',
-    instrumentPort: process.env.INSTRUMENT_PORT,
+    instrumentPort: parseInt(process.env.INSTRUMENT_PORT),
     instrumentHost: process.env.INSTRUMENT_HOST || '127.0.0.1',
-    sLogInterval: process.env.S_LOG_INTERVAL || 60,
-    maxPeers: process.env.MAX_PEERS || undefined // Note: breaks hyperswarm if set to null (expects either undefined or an int)
+    sLogInterval: parseInt(process.env.S_LOG_INTERVAL) || 60,
+    maxPeers: parseInt(process.env.MAX_PEERS) || undefined // Note: breaks hyperswarm if set to null (expects either undefined or an int)
   }
 
   if (!config.seedListKey) throw new Error('SEED_LIST_KEY must be set')
