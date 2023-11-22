@@ -14,7 +14,11 @@ ENV STORAGE=/home/seeder/store
 ENV INSTRUMENT_HOST=0.0.0.0
 ENV INSTRUMENT_PORT=8080
 
-RUN npm i -g hdegroote/instrumented-simple-seeder#debugging
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git
+
+RUN npm i -g --verbose https://github.com/HDegroote/instrumented-simple-seeder#debugging
 
 RUN useradd --create-home seeder
 USER seeder
