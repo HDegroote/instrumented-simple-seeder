@@ -12,9 +12,9 @@ function loadConfig () {
     logLevel: process.env.LOG_LEVEL || 'info',
     instrument: process.env.INSTRUMENT?.trim().toLowerCase() === 'true',
     repl: process.env.REPL?.trim().toLowerCase() === 'true',
-    instrumentPort: parseInt(process.env.INSTRUMENT_PORT),
+    instrumentPort: parseInt(process.env.INSTRUMENT_PORT || 0),
     instrumentHost: process.env.INSTRUMENT_HOST || '127.0.0.1',
-    sLogInterval: parseInt(process.env.S_LOG_INTERVAL) || 60,
+    sLogInterval: parseInt(process.env.S_LOG_INTERVAL || 60),
     maxPeers: parseInt(process.env.MAX_PEERS) || undefined // Note: breaks hyperswarm if set to null (expects either undefined or an int)
   }
 
