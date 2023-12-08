@@ -34,6 +34,7 @@
     "instrumented-swarm": "^1.2.0",
     "pino": "^8.15.0",
     "prom-client": "^14.2.0",
+    "repl-swarm": "^2.1.0",
     "safety-catch": "^1.0.2",
     "simple-seeder": "^3.2.0",
     "tiny-byte-size": "^1.1.0"
