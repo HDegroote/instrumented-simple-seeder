@@ -29,7 +29,7 @@
     "hypercore-detector": "^1.0.0",
     "hypercore-id-encoding": "^1.2.0",
     "hyperdht": "^6.9.1",
-    "hypermetrics": "^1.1.0",
+    "hypermetrics": "^1.2.0",
     "hyperswarm": "^4.7.4",
     "instrumented-swarm": "^1.2.0",
     "pino": "^8.15.0",

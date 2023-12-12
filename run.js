@@ -14,6 +14,7 @@ function loadConfig () {
     repl: process.env.REPL?.trim().toLowerCase() === 'true',
     instrumentPort: parseInt(process.env.INSTRUMENT_PORT || 0),
     instrumentHost: process.env.INSTRUMENT_HOST || '127.0.0.1',
+    instrumentDetailed: process.env.INSTRUMENT_DETAILED?.trim().toLowerCase() === 'true',
     sLogInterval: parseInt(process.env.S_LOG_INTERVAL || 60),
     maxPeers: parseInt(process.env.MAX_PEERS) || undefined // Note: breaks hyperswarm if set to null (expects either undefined or an int)
   }
