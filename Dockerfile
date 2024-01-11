@@ -8,11 +8,11 @@ ENV DHT_PORT=0
 ENV INSTRUMENT=FALSE
 ENV REPL=FALSE
 ENV LOG_LEVEL=info
-
-# Never really a need to change these
-ENV STORAGE=/home/seeder/store
-ENV INSTRUMENT_HOST=0.0.0.0
+ENV INSTRUMENT_HOST=127.0.0.1
 ENV INSTRUMENT_PORT=8080
+
+# Never really a need to change this
+ENV STORAGE=/home/seeder/store
 
 RUN useradd --create-home seeder
 
