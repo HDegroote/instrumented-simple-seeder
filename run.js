@@ -28,6 +28,6 @@ const config = loadConfig()
 const logger = setupLogger(
   { name: 'simple-seeder', level: config.logLevel }
 )
-logger.info(`Using config ${JSON.stringify(config, null, 1)}`)
 
+logger.info('Starting the seeder')
 runSeeder(logger, config)
