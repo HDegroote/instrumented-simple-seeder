@@ -30,7 +30,7 @@
     "hypercore-id-encoding": "^1.2.0",
     "hyperdht": "^6.9.1",
     "hyperswarm": "^4.7.4",
-    "@hdegroote/instrumented-corestore": "^0.0.1-alpha.1",
+    "@hdegroote/instrumented-corestore": "0.0.1-alpha.2",
     "instrumented-swarm": "^1.2.0",
     "pino": "^8.15.0",
     "prom-client": "^14.2.0",
