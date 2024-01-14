@@ -26,9 +26,11 @@ module.exports = async function runSeeder (logger, config) {
     logger.info('Instrumented the simple seeder')
   }
 
-  setInterval(
-    () => { logger.info(getSeederInfo(tracker)) },
-    config.sLogInterval * 1000
-  )
-  logger.info(getSeederInfo(tracker))
+  if (config.sLogInterval) {
+    setInterval(
+      () => { logger.info(getSeederInfo(tracker)) },
+      config.sLogInterval * 1000
+    )
+    logger.info(getSeederInfo(tracker))
+  }
 }
