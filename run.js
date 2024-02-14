@@ -31,8 +31,13 @@ const logger = setupLogger(
 )
 
 if (config.enableHeapdumps) {
-  logger.warn('Enabling heapdumps. Send a kill -USR2 signal to this process to create one. They are stored in the working directory of the node process.')
-  require('heapdump')
+  logger.warn('Enabling heapdumps. Send a kill -USR2 signal to this process to create one. They are stored in directory ./heapdumps if that directory exists.')
+  const heapdump = require('heapdump')
+  process.on('SIGUSR2', function () {
+    const loc = `./heapdumps/seeder-${Date.now()}.heapsnapshot`
+    logger.warn(`Writing heapdump to ${loc}`)
+    heapdump.writeSnapshot(loc)
+  })
 }
 
 logger.info('Starting the seeder')

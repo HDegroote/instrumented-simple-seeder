@@ -27,9 +27,12 @@ COPY NOTICE /home/seeder/NOTICE
 
 USER seeder
 
-
 # Ensure correct permissions on corestore dir by already creating it
 # (relevant when using volumes)
 RUN mkdir $STORAGE
 
+# Only used when debugging mem leaks (mount a bind here then to get the heapdumps)
+RUN mkdir /home/seeder/heapdumps
+
+WORKDIR /home/seeder/
 ENTRYPOINT ["node", "/home/seeder/run.js"]
