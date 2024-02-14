@@ -1,11 +1,13 @@
 FROM node:20-slim
 
+RUN apt update && apt install curl -y
+
 # When port-mapping, ensure the from and to port are the same
 # else the holepunching will fail (irrelevant for host-networking)
 # Only set when you know the port is unfirewalled
 ENV DHT_PORT=0
 
-ENV INSTRUMENT=FALSE
+ENV INSTRUMENT=TRUE
 ENV REPL=FALSE
 ENV LOG_LEVEL=info
 ENV INSTRUMENT_HOST=127.0.0.1
@@ -33,6 +35,8 @@ RUN mkdir $STORAGE
 
 # Only used when debugging mem leaks (mount a bind here then to get the heapdumps)
 RUN mkdir /home/seeder/heapdumps
+
+HEALTHCHECK --retries=1 --timeout=5s CMD curl --fail http://localhost:${INSTRUMENT_PORT}/health
 
 WORKDIR /home/seeder/
 ENTRYPOINT ["node", "/home/seeder/run.js"]
