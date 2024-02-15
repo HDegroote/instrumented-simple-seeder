@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:20
 
 RUN apt update && apt install curl -y
 
@@ -27,6 +27,11 @@ COPY index.js /home/seeder/index.js
 COPY LICENSE /home/seeder/LICENSE
 COPY NOTICE /home/seeder/NOTICE
 
+# Temp hack to debug heapdump
+RUN rm -r /home/seeder/node_modules
+RUN cd /home/seeder && npm i
+
+
 USER seeder
 
 # Ensure correct permissions on corestore dir by already creating it
@@ -39,4 +44,5 @@ RUN mkdir /home/seeder/heapdumps
 HEALTHCHECK --retries=1 --timeout=5s CMD curl --fail http://localhost:${INSTRUMENT_PORT}/health
 
 WORKDIR /home/seeder/
+
 ENTRYPOINT ["node", "/home/seeder/run.js"]
