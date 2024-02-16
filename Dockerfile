@@ -33,9 +33,6 @@ USER seeder
 # (relevant when using volumes)
 RUN mkdir $STORAGE
 
-# Only used when debugging mem leaks (mount a bind here then to get the heapdumps)
-RUN mkdir /home/seeder/heapdumps
-
 HEALTHCHECK --retries=1 --timeout=5s CMD curl --fail http://localhost:${INSTRUMENT_PORT}/health
 
 WORKDIR /home/seeder/
