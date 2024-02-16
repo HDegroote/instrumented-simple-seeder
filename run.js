@@ -16,8 +16,7 @@ function loadConfig () {
     instrumentHost: process.env.INSTRUMENT_HOST || '127.0.0.1',
     detailedMetrics: process.env.DETAILED_METRICS?.trim().toLowerCase() === 'true',
     sLogInterval: parseInt(process.env.S_LOG_INTERVAL || 0), // No logging by default
-    maxPeers: parseInt(process.env.MAX_PEERS) || undefined, // Note: breaks hyperswarm if set to null (expects either undefined or an int)
-    enableHeapdumps: process.env.ENABLE_HEAPDUMPS?.trim().toLowerCase() === 'true'
+    maxPeers: parseInt(process.env.MAX_PEERS) || undefined // Note: breaks hyperswarm if set to null (expects either undefined or an int)
   }
 
   if (!config.seedListKey) throw new Error('SEED_LIST_KEY must be set')
@@ -29,16 +28,6 @@ const config = loadConfig()
 const logger = setupLogger(
   { name: 'simple-seeder', level: config.logLevel }
 )
-
-if (config.enableHeapdumps) {
-  logger.warn('Enabling heapdumps. Send a kill -USR2 signal to this process to create one. They are stored in directory ./heapdumps if that directory exists.')
-  const heapdump = require('heapdump')
-  process.on('SIGUSR2', function () {
-    const loc = `./heapdumps/seeder-${Date.now()}.heapsnapshot`
-    logger.warn(`Writing heapdump to ${loc}`)
-    heapdump.writeSnapshot(loc)
-  })
-}
 
 logger.info('Starting the seeder')
 runSeeder(logger, config)
