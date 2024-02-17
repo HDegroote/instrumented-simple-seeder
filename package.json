@@ -1,6 +1,6 @@
 {
   "name": "instrumented-simple-seeder",
-  "version": "0.0.1-alpha.28",
+  "version": "0.0.1-alpha.29",
   "description": "",
   "bin": {
     "instrumented-seeder": "./run.js"
