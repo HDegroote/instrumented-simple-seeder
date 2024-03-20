@@ -27,7 +27,7 @@
     "fastify": "^4.22.0",
     "graceful-goodbye": "^1.3.0",
     "hyperbee": "^2.18.1",
-    "hypercore": "holepunchto/hypercore#add-detailed-_requestRangeBlock-traces",
+    "hypercore": "holepunchto/hypercore",
     "hypercore-detector": "^1.0.0",
     "hypercore-id-encoding": "^1.2.0",
     "hyperdht": "^6.9.1",
