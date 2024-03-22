@@ -51,6 +51,10 @@ function applyTracerMonkeyPatches () {
   // But for now we replace it completely because we need more detailed tracing
   // const original = Replicator.Peer.prototype._requestRangeBlock
 
+  Replicator.Peer.prototype.getMaxInflight = function () {
+    return 16
+  }
+
   Replicator.Peer.prototype._requestRangeBlock = function (index, length) {
     this.tracer.trace('_requestRangeBlock')
     if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
