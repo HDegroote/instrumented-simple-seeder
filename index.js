@@ -51,10 +51,11 @@ function applyTracerMonkeyPatches () {
   // But for now we replace it completely because we need more detailed tracing
   // const original = Replicator.Peer.prototype._requestRangeBlock
 
-  Replicator.Peer.prototype.getMaxInflight = function () {
+  /* Replicator.Peer.prototype.getMaxInflight = function () {
     return 16
-  }
+  } */
 
+  /*
   Replicator.Peer.prototype._requestRangeBlock = function (index, length) {
     this.tracer.trace('_requestRangeBlock')
     if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
@@ -78,6 +79,32 @@ function applyTracerMonkeyPatches () {
     this.tracer.trace('_requestRangeBlock_adding-inflight')
     b.inflight.push(req)
     this._send(req)
+
+    // Don't think this will ever happen, as the pending queue is drained before the range queue
+    // but doesn't hurt to check this explicitly here also.
+    if (b.queued) b.queued = false
+    return true
+  } */
+
+  Replicator.Peer.prototype._requestRangeBlock = function (index, length) {
+    this.tracer.trace('_requestRangeBlock')
+    if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
+
+    this.tracer.trace('_requestRangeBlock_add-block-to-replicator')
+    const b = this.replicator._blocks.add(index, 0)
+    if (b.inflight.length > 0) return false
+
+    this.tracer.trace('_requestRangeBlock_make-request')
+    const req = this._makeRequest(index >= length, b.priority)
+
+    // If the request cannot be satisfied, dealloc the block request if no one is subscribed to it
+    if (req === null) {
+      b.gc()
+      return false
+    }
+
+    this.tracer.trace('_requestRangeBlock_adding-inflight')
+    this._sendBlockRequest(req, b)
 
     // Don't think this will ever happen, as the pending queue is drained before the range queue
     // but doesn't hurt to check this explicitly here also.
