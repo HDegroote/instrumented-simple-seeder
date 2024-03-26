@@ -76,7 +76,6 @@ function applyTracerMonkeyPatches () {
     return true
   }
 
-
   /* function (index, length) {
     this.tracer.trace('_requestRangeBlock')
     if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
