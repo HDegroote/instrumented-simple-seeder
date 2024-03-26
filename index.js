@@ -50,7 +50,7 @@ function applyTracerMonkeyPatches () {
   // it updated as this method changes in Hypercore
   // But for now we replace it completely because we need more detailed tracing
   // const original = Replicator.Peer.prototype._requestRangeBlock
-  Replicator.Peer.prototype._requestRangeBlock = function _requestRangeBlock (index, length) {
+  /* Replicator.Peer.prototype._requestRangeBlock = function _requestRangeBlock (index, length) {
     this.tracer.trace('_requestRangeBlock')
     if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
 
@@ -74,9 +74,9 @@ function applyTracerMonkeyPatches () {
     // but doesn't hurt to check this explicitly here also.
     if (b.queued) b.queued = false
     return true
-  }
+  } */
 
-  /* function (index, length) {
+  Replicator.Peer.prototype._requestRangeBlock = function (index, length) {
     this.tracer.trace('_requestRangeBlock')
     if (this.core.bitfield.get(index) === true || !this._hasTreeParent(index)) return false
 
@@ -104,5 +104,5 @@ function applyTracerMonkeyPatches () {
     // but doesn't hurt to check this explicitly here also.
     if (b.queued) b.queued = false
     return true
-  } */
+  }
 }
