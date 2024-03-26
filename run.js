@@ -11,6 +11,7 @@ function loadConfig () {
     seedListKey: process.env.SEED_LIST_KEY,
     logLevel: process.env.LOG_LEVEL || 'info',
     instrument: process.env.INSTRUMENT?.trim().toLowerCase() === 'true',
+    trace: process.env.SEEDER_TRACE?.trim().toLowerCase() === 'true',
     repl: process.env.REPL?.trim().toLowerCase() === 'true',
     instrumentPort: parseInt(process.env.INSTRUMENT_PORT || 0),
     instrumentHost: process.env.INSTRUMENT_HOST || '127.0.0.1',
