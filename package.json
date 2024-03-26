@@ -21,7 +21,7 @@
   "homepage": "https://github.com/HDegroote/instrumented-simple-seeder#readme",
   "dependencies": {
     "@hdegroote/instrumented-corestore": "^1.0.0",
-    "corestore": "^6.16.0",
+    "corestore": "^6.18.1",
     "debounceify": "^1.0.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.22.0",
