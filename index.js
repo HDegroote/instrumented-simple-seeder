@@ -47,8 +47,7 @@ module.exports = async function runSeeder (logger, config) {
 function applyTracerMonkeyPatches () {
   const originalRequestRangeBlock = Replicator.Peer.prototype._requestRangeBlock
   Replicator.Peer.prototype._requestRangeBlock = function _requestRangeBlockMonkeyPatch (...args) {
-    const self = this
     this.tracer.trace('_requestRangeBlock')
-    return originalRequestRangeBlock.call(self, ...args)
+    return originalRequestRangeBlock.call(this, ...args)
   }
 }
