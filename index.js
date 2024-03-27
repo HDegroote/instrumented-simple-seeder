@@ -45,11 +45,8 @@ module.exports = async function runSeeder (logger, config) {
 }
 
 function applyTracerMonkeyPatches () {
-  // Ideally we'd just add a trace counter before calling, to keep
-  // it updated as this method changes in Hypercore
-  // But for now we replace it completely because we need more detailed tracing
   const originalRequestRangeBlock = Replicator.Peer.prototype._requestRangeBlock
-  Replicator.Peer.prototype._requestRangeBlock = function   _requestRangeBlockMonkeyPatch (...args) {
+  Replicator.Peer.prototype._requestRangeBlock = function _requestRangeBlockMonkeyPatch (...args) {
     const self = this
     this.tracer.trace('_requestRangeBlock')
     return originalRequestRangeBlock.call(self, ...args)
