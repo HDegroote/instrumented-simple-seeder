@@ -6,7 +6,6 @@ const getSeederInfo = require('./lib/seeder-info')
 const setupSeeder = require('./lib/seeder')
 
 module.exports = async function runSeeder (logger, config) {
-  // TODO: use a separate config var for adding tracing
   if (config.trace) {
     logger.warn('Applying monkey patches to improve tracing')
     // TODO: clean up flow
