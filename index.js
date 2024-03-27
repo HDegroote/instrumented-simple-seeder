@@ -1,10 +1,19 @@
 const goodbye = require('graceful-goodbye')
+const Replicator = require('hypercore/lib/replicator')
 
 const instrument = require('./lib/instrument')
 const getSeederInfo = require('./lib/seeder-info')
 const setupSeeder = require('./lib/seeder')
 
 module.exports = async function runSeeder (logger, config) {
+  if (config.trace) {
+    logger.warn('Applying monkey patches to improve tracing')
+    // TODO: clean up flow
+    // Metrics should be setup before the seeder starts, then
+    // the monkey patching can live in the metrics logic itself
+    applyTracerMonkeyPatches()
+  }
+
   const tracker = await setupSeeder(config)
   goodbye(async () => {
     logger.info('Exiting simple seeder')
@@ -32,5 +41,13 @@ module.exports = async function runSeeder (logger, config) {
       config.sLogInterval * 1000
     )
     logger.info(getSeederInfo(tracker))
+  }
+}
+
+function applyTracerMonkeyPatches () {
+  const originalRequestRangeBlock = Replicator.Peer.prototype._requestRangeBlock
+  Replicator.Peer.prototype._requestRangeBlock = function _requestRangeBlockMonkeyPatch (...args) {
+    this.tracer.trace('_requestRangeBlock')
+    return originalRequestRangeBlock.call(this, ...args)
   }
 }
