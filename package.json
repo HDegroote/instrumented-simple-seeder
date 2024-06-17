@@ -1,6 +1,6 @@
 {
   "name": "instrumented-simple-seeder",
-  "version": "0.0.1-alpha.42",
+  "version": "0.0.1-alpha.43",
   "description": "Simple seeder instrumented so it can be scraped by prometheus",
   "bin": {
     "instrumented-seeder": "./run.js"
