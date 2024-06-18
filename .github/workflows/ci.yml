@@ -106,7 +106,6 @@ jobs:
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2 https://github.com/actions/setup-node/releases/tag/v3.8.2
         with:
           node-version: 20
-          registry-url: 'https://npm.pkg.github.com'
       - run: npm install --omit=dev
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,9 +113,8 @@ jobs:
         name: Login to container registry
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0 https://github.com/docker/login-action/releases/tag/v3.0.0
         with:
-          registry: "ghcr.io"
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push Docker image
         uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0 https://github.com/docker/build-push-action/releases/tag/v5.1.0
