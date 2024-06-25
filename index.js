@@ -10,7 +10,7 @@ const getSeederInfo = require('./lib/seeder-info')
 
 module.exports = async function runSeeder (logger, config) {
   const { swarm, store } = await setupSwarmAndStore(config) // TODO: would be cleaner as a sync function
-  const tracker = new SimpleSeeder(store, swarm)
+  const tracker = new SimpleSeeder(store, swarm, { backup: config.backup })
 
   goodbye(async () => {
     logger.info('Exiting simple seeder')
