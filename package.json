@@ -39,7 +39,7 @@
     "safety-catch": "^1.0.2",
     "simple-seeder": "^3.2.0",
     "tiny-byte-size": "^1.1.0",
-    "udx-native": "1.10.1"
+    "udx-native": "1.10.2"
   },
   "devDependencies": {
     "standard": "^17.1.0"
