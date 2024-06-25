@@ -24,7 +24,8 @@ function loadConfig () {
     detailedMetrics: process.env.DETAILED_METRICS?.trim().toLowerCase() === 'true',
     sLogInterval: parseInt(process.env.S_LOG_INTERVAL || 0), // No logging by default
     maxPeers: parseInt(process.env.MAX_PEERS) || undefined, // Note: breaks hyperswarm if set to null (expects either undefined or an int)
-    getDescriptionWaitMs: parseInt(process.env.GET_DESCRIPTION_WAIT_MS || 30000)
+    getDescriptionWaitMs: parseInt(process.env.GET_DESCRIPTION_WAIT_MS || 30000),
+    backup: process.env.SEEDER_BACKUP_MODE?.trim().toLowerCase() === 'true'
   }
 
   if (!config.seedListKey) throw new Error('SEED_LIST_KEY must be set')
