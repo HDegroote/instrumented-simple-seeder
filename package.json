@@ -27,7 +27,7 @@
     "fastify": "^4.22.0",
     "graceful-goodbye": "^1.3.0",
     "hyperbee": "holepunchto/hyperbee#min-cache",
-    "hypercore": "^10.35.2",
+    "hypercore": "holepunchto/hypercore#disable-cache",
     "hypercore-detector": "^1.0.0",
     "hypercore-id-encoding": "^1.2.0",
     "hyperdht": "^6.9.1",
