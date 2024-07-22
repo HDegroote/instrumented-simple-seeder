@@ -13,6 +13,7 @@ function loadConfig () {
     port: parseInt(process.env.DHT_PORT || 0),
     corestoreLoc: process.env.STORAGE || './corestore',
     seedListKey: process.env.SEED_LIST_KEY,
+    maxCacheSize: parseInt(process.env.SEEDER_MAX_CACHE_SIZE || 1000),
     logLevel: process.env.LOG_LEVEL || 'info',
     instrument: process.env.INSTRUMENT?.trim().toLowerCase() === 'true',
     trace: process.env.SEEDER_TRACE?.trim().toLowerCase() === 'true',

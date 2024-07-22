@@ -4,6 +4,7 @@ const Hyperswarm = require('hyperswarm')
 const DHT = require('hyperdht')
 const SimpleSeeder = require('simple-seeder/lib/simple-seeder')
 const debounceify = require('debounceify')
+const Rache = require('rache')
 
 const instrument = require('./lib/instrument')
 const getSeederInfo = require('./lib/seeder-info')
@@ -42,8 +43,9 @@ module.exports = async function runSeeder (logger, config) {
   }
 }
 
-async function setupSwarmAndStore ({ corestoreLoc, port, maxPeers }) {
-  const store = new Corestore(corestoreLoc)
+async function setupSwarmAndStore ({ corestoreLoc, port, maxPeers, maxCacheSize }) {
+  const globalCache = new Rache({ maxSize: maxCacheSize })
+  const store = new Corestore(corestoreLoc, { globalCache })
 
   const keyPair = await store.createKeyPair('simple-seeder-swarm')
   // Assume that if a DHT port was set, it's not firewalled
