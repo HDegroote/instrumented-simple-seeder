@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 require('dotenv').config()
 const setupLogger = require('pino')
+const idEnc = require('hypercore-id-encoding')
 
 const runSeeder = require('./index')
 
@@ -30,6 +31,18 @@ function loadConfig () {
   }
 
   if (!config.seedListKey) throw new Error('SEED_LIST_KEY must be set')
+
+  if (process.env.SEEDER_PROMETHEUS_ALIAS) {
+    config.prometheusAlias = process.env.SEEDER_PROMETHEUS_ALIAS
+    try {
+      config.prometheusSharedSecret = idEnc.decode(process.env.SEEDER_PROMETHEUS_SHARED_SECRET)
+      config.prometheusScraperPublicKey = idEnc.decode(process.env.SEEDER_PROMETHEUS_SCRAPER_PUBLIC_KEY)
+    } catch (error) {
+      console.log(error)
+      console.log('If SEEDER_PROMETHEUS_ALIAS is set, then SEEDER_PROMETHEUS_SHARED_SECRET and SEEDER_PROMETHEUS_SCRAPER_PUBLIC_KEY must be set to valid keys')
+      process.exit(1)
+    }
+  }
 
   return config
 }
