@@ -50,7 +50,7 @@ async function setupSwarmAndStore ({ corestoreLoc, port, maxPeers, maxCacheSize 
   const keyPair = await store.createKeyPair('simple-seeder-swarm')
   // Assume that if a DHT port was set, it's not firewalled
   const firewalled = port == null || port === 0
-  const dht = new DHT({ port, firewalled, connectionKeepAlive: 5000 })
+  const dht = new DHT({ port, firewalled })
   const swarm = new Hyperswarm({ keyPair, dht, maxPeers })
 
   swarm.on('connection', (socket) => {
