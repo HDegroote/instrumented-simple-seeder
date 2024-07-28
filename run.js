@@ -37,6 +37,7 @@ function loadConfig () {
     try {
       config.prometheusSharedSecret = idEnc.decode(process.env.SEEDER_PROMETHEUS_SHARED_SECRET)
       config.prometheusScraperPublicKey = idEnc.decode(process.env.SEEDER_PROMETHEUS_SCRAPER_PUBLIC_KEY)
+      config.prometheusServiceName = 'seeder'
     } catch (error) {
       console.log(error)
       console.log('If SEEDER_PROMETHEUS_ALIAS is set, then SEEDER_PROMETHEUS_SHARED_SECRET and SEEDER_PROMETHEUS_SCRAPER_PUBLIC_KEY must be set to valid keys')
