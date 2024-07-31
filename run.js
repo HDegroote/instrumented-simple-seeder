@@ -2,6 +2,7 @@
 require('dotenv').config()
 const setupLogger = require('pino')
 const idEnc = require('hypercore-id-encoding')
+const byteSize = require('tiny-byte-size')
 
 const runSeeder = require('./index')
 
@@ -53,9 +54,69 @@ async function main () {
   const logger = setupLogger(
     { name: 'simple-seeder', level: config.logLevel }
   )
+  monkeyPatchBuffer(logger)
 
   logger.info('Starting the seeder')
   runSeeder(logger, config)
+}
+
+function monkeyPatchBuffer (logger) {
+  let bufCounter = 0
+  const bufMap = new Map()
+  const registry = new FinalizationRegistry((key) => {
+    clearTimeout(bufMap.get(key))
+    bufMap.delete(key)
+    // console.log('cleaning up', entry, `key ${key})`)
+  })
+
+  const originalAllocUnsafe = Buffer.allocUnsafe
+
+  const leakCounters = new Map()
+  setTimeout(() => {
+    console.log('leak overview', leakCounters)
+    const leaks = []
+    for (const [location, { amount, leakedBytesPerEntry }] of leakCounters.entries()) {
+      leaks.push({
+        location, amount, leakedBytesPerEntry, totalLeakedBytes: amount * leakedBytesPerEntry
+      })
+      // logger.warn(`${amount} leaks of ${leakedBytesPerEntry} at ${location} (total: ${amount * leakedBytesPerEntry})`)
+    }
+
+    leaks.sort((e1, e2) => e1.totalLeakedBytes < e2.totalLeakedBytes ? 1 : e1.totalLeakedBytes > e2.totalLeakedBytes ? -1 : 0)
+    for (const { amount, leakedBytesPerEntry, location, totalLeakedBytes } of leaks) {
+      console.log(`${amount} leaks of ${leakedBytesPerEntry} (total: ${byteSize(totalLeakedBytes)}) at ${location}`)
+    }
+  }, 1000 * 60 * 1)
+
+  Buffer.allocUnsafe = function allocUnsafeMonkeyPatch (...args) {
+    // console.log('unsafe alloc buffer')
+    const res = originalAllocUnsafe(...args)
+
+    if (res.buffer.byteLength > 10 * res.byteLength) {
+      const trace = (new Error()).stack
+      const key = bufCounter++
+
+      const timeout = setTimeout(() => {
+        const location = trace.split('\n').slice(2).join('\n')
+        let current = leakCounters.get(location)
+        if (current === undefined) {
+          current = {
+            amount: 0,
+            bufferLength: res.byteLength,
+            arrayBufferLength: res.buffer.byteLength,
+            leakedBytesPerEntry: res.buffer.byteLength - res.byteLength
+          }
+          leakCounters.set(location, current)
+        }
+        current.amount++
+        // logger.warn(`location ${location}`)
+        // logger.warn(`Possible memleak for buffer length ${res.buffer.byteLength} of ${res.byteLength}: ${trace} `)
+      }, 1000 * 15)
+      bufMap.set(key, timeout)
+      registry.register(res, key)
+    }
+    return res
+  }
 }
 
 main()
