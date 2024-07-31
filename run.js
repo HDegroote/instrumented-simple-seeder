@@ -54,6 +54,9 @@ async function main () {
     { name: 'simple-seeder', level: config.logLevel }
   )
 
+  logger.warn('polyfilling allocUnsafe')
+  Buffer.allocUnsafe = Buffer.alloc
+
   logger.info('Starting the seeder')
   runSeeder(logger, config)
 }
