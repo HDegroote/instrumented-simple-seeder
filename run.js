@@ -64,6 +64,7 @@ function monkeyPatchBuffer (logger) {
   let bufCounter = 0
   const bufMap = new Map()
   const registry = new FinalizationRegistry((key) => {
+    // console.log('deleting from registry')
     clearTimeout(bufMap.get(key))
     bufMap.delete(key)
     // console.log('cleaning up', entry, `key ${key})`)
@@ -73,7 +74,7 @@ function monkeyPatchBuffer (logger) {
 
   const leakCounters = new Map()
   setTimeout(() => {
-    console.log('leak overview', leakCounters)
+    // console.log('leak overview', leakCounters)
     const leaks = []
     for (const [location, { amount, leakedBytesPerEntry }] of leakCounters.entries()) {
       leaks.push({
@@ -95,20 +96,23 @@ function monkeyPatchBuffer (logger) {
     if (res.buffer.byteLength > 10 * res.byteLength) {
       const trace = (new Error()).stack
       const key = bufCounter++
-
+      const bufferLength = res.byteLength
+      const arrayBufferLength = res.buffer.byteLength
+      const leakedBytesPerEntry = res.buffer.byteLength - res.byteLength
       const timeout = setTimeout(() => {
         const location = trace.split('\n').slice(2).join('\n')
         let current = leakCounters.get(location)
         if (current === undefined) {
           current = {
             amount: 0,
-            bufferLength: res.byteLength,
-            arrayBufferLength: res.buffer.byteLength,
-            leakedBytesPerEntry: res.buffer.byteLength - res.byteLength
+            bufferLength,
+            arrayBufferLength,
+            leakedBytesPerEntry
           }
           leakCounters.set(location, current)
         }
         current.amount++
+        bufMap.delete(key)
         // logger.warn(`location ${location}`)
         // logger.warn(`Possible memleak for buffer length ${res.buffer.byteLength} of ${res.byteLength}: ${trace} `)
       }, 1000 * 15)
