@@ -16,7 +16,7 @@ ENV INSTRUMENT_PORT=8080
 # Never really a need to change this
 ENV STORAGE=/home/seeder/store
 
-RUN useradd --create-home seeder
+RUN useradd -u 19554 --create-home seeder
 
 COPY package-lock.json /home/seeder/package-lock.json
 COPY node_modules /home/seeder/node_modules
