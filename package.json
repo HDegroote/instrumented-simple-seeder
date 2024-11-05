@@ -40,8 +40,7 @@
     "rache": "^1.0.0",
     "safety-catch": "^1.0.2",
     "simple-seeder": "^3.2.0",
-    "tiny-byte-size": "^1.1.0",
-    "udx-native": "1.13.3"
+    "tiny-byte-size": "^1.1.0"
   },
   "devDependencies": {
     "standard": "^17.1.0"
