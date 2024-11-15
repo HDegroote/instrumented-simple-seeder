@@ -61,46 +61,46 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:${{ steps.extract_tag.outputs.tag }}, ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:latest
           build-args: TAG=${{ steps.extract_tag.outputs.tag }}
 
-  daily_docker_build:
-    if: ${{ github.event_name == 'schedule' || (startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'debug')) || github.event_name == 'workflow_dispatch' }}
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: 'Extract day of month'
-        shell: bash
-        run: echo "day_of_month=$(date +'%d')" >> $GITHUB_OUTPUT
-        id: extract_day_of_month
-      - # Needed for buildX, which accesses cwd
-        name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 https://github.com/actions/checkout/releases/tag/v4.1.1
-      - run: rm package-lock.json; npm install # We want the latest dependencies for the daily build
-      - run: npm test
-      - run: rm -r node_modules && npm install --omit=dev
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0 https://github.com/docker/setup-qemu-action/releases/tag/v3.0.0
-      - # See note on build-push-action github repo on why this needed
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0 https://github.com/docker/setup-buildx-action/releases/tag/v3.0.0
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0 https://github.com/docker/login-action/releases/tag/v3.0.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        # Tag strategy: 'latest' lives at build-with-latest-deps
-        # and we also store the last month of builds, by also tagging
-        # with 'build-with-latest-deps-<day-of-month>', so we can travel
-        # back in time to see differences
-        name: Build and push Docker image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0 https://github.com/docker/build-push-action/releases/tag/v5.1.0
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:build-with-latest-deps, ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:build-with-latest-deps-${{ steps.extract_day_of_month.outputs.day_of_month }}
-          build-args: TAG=build-with-latest-deps
+  # daily_docker_build:
+  #   if: ${{ github.event_name == 'schedule' || (startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'debug')) || github.event_name == 'workflow_dispatch' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     -
+  #       name: 'Extract day of month'
+  #       shell: bash
+  #       run: echo "day_of_month=$(date +'%d')" >> $GITHUB_OUTPUT
+  #       id: extract_day_of_month
+  #     - # Needed for buildX, which accesses cwd
+  #       name: Checkout
+  #       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 https://github.com/actions/checkout/releases/tag/v4.1.1
+  #     - run: rm package-lock.json; npm install # We want the latest dependencies for the daily build
+  #     - run: npm test
+  #     - run: rm -r node_modules && npm install --omit=dev
+  #     -
+  #       name: Set up QEMU
+  #       uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0 https://github.com/docker/setup-qemu-action/releases/tag/v3.0.0
+  #     - # See note on build-push-action github repo on why this needed
+  #       name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0 https://github.com/docker/setup-buildx-action/releases/tag/v3.0.0
+  #     -
+  #       name: Login to Docker Hub
+  #       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0 https://github.com/docker/login-action/releases/tag/v3.0.0
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     -
+  #       # Tag strategy: 'latest' lives at build-with-latest-deps
+  #       # and we also store the last month of builds, by also tagging
+  #       # with 'build-with-latest-deps-<day-of-month>', so we can travel
+  #       # back in time to see differences
+  #       name: Build and push Docker image
+  #       uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0 https://github.com/docker/build-push-action/releases/tag/v5.1.0
+  #       with:
+  #         context: .
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:build-with-latest-deps, ${{ secrets.DOCKERHUB_USERNAME }}/simple-seeder:build-with-latest-deps-${{ steps.extract_day_of_month.outputs.day_of_month }}
+  #         build-args: TAG=build-with-latest-deps
 
   # To trigger a debug build including heapdump functionality,
   # push a tag containing 'debug'
