@@ -20,12 +20,18 @@ module.exports = async function runSeeder (logger, config) {
     logger.info('Destroyed swarm and tracker')
   }, 10)
 
+  // TODO: the flow for instrumenting needs a refactor
+  // --it should happen at run.js level, without a REST server
+  // and with a cleaned-up lifecycle (new major)
   if (config.instrument) {
-    const server = await instrument(tracker, logger, config)
+    const { server, dhtPromClient } = await instrument(tracker, logger, config)
     goodbye(async () => {
-      logger.info('Closing instrumenting server')
-      await server.close()
-      logger.info('Closed instrumenting server')
+      logger.info('Closing instrumenting service')
+      await Promise.all([
+        server.close(),
+        dhtPromClient.close()
+      ])
+      logger.info('Closed instrumenting service')
     }, 1)
 
     logger.info('Instrumented the simple seeder')
